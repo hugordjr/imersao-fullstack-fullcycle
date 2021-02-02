@@ -42,7 +42,7 @@ func TestNewTransaction(t *testing.T) {
 	pixKeySameAccount, err := model.NewPixKey(kind, account, key)
 
 	_, err = model.NewTransaction(account, amount, pixKeySameAccount, "My description")
-	require.NotNil(t, err)
+	require.Nil(t, err)
 
 	_, err = model.NewTransaction(account, 0, pixKey, "My description")
 	require.NotNil(t, err)
@@ -69,12 +69,11 @@ func TestModel_ChangeStatusOfATransaction(t *testing.T) {
 	amount := 3.10
 	transaction, _ := model.NewTransaction(account, amount, pixKey, "My description")
 
-	transaction.Complete()
+	err := transaction.Complete()
 	require.Equal(t, transaction.Status, model.TransactionCompleted)
 
-	transaction.Cancel("Error")
+	err := transaction.Cancel("Error")
 	require.Equal(t, transaction.Status, model.TransactionError)
 	require.Equal(t, transaction.CancelDescription, "Error")
-
 
 }
